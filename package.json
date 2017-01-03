@@ -9,7 +9,9 @@
   "bugs": "https://github.com/yxliang01/Eth-Transaction/issues",
   "homepage": "https://github.com/yxliang01/Eth-Transaction",
   "scripts": {
-    "build": "babel src --out-dir dist"
+    "build": "babel src --out-dir dist",
+    "publish-please": "publish-please",
+    "prepublish": "publish-please guard"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
