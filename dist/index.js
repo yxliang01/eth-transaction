@@ -40,3 +40,4 @@ function autoGas(web3, obj, minGas, additionalGas) {
 }
 
 exports.autoGas = autoGas;
+//# sourceMappingURL=index.js.map

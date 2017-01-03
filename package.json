@@ -1,13 +1,13 @@
 {
-  "name": "Eth-Transaction",
+  "name": "eth-transaction",
   "version": "1.0.0",
   "description": "A library for creating Web3(Ethereum) transactions easier.",
   "main": "dist/index.js",
-  "repository": "https://github.com/yxliang01/Eth-Transaction",
+  "repository": "https://github.com/yxliang01/eth-transaction",
   "author": "Xiao Liang Yu",
   "license": "MIT",
-  "bugs": "https://github.com/yxliang01/Eth-Transaction/issues",
-  "homepage": "https://github.com/yxliang01/Eth-Transaction",
+  "bugs": "https://github.com/yxliang01/eth-transaction/issues",
+  "homepage": "https://github.com/yxliang01/eth-transaction",
   "scripts": {
     "build": "babel src --out-dir dist",
     "publish-please": "publish-please",
