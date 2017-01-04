@@ -1,6 +1,6 @@
 {
   "name": "eth-transaction",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A library for creating Web3(Ethereum) transactions easier.",
   "main": "dist/index.js",
   "repository": "https://github.com/yxliang01/eth-transaction",
@@ -20,7 +20,8 @@
     "publish-please": "^2.2.0"
   },
   "dependencies": {
-    "assert": "^1.4.1"
+    "assert": "^1.4.1",
+    "lodash.clonedeep": "^4.5.0"
   },
   "keywords": [
     "eth",

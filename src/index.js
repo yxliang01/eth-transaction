@@ -1,3 +1,5 @@
+import clonedeep from 'lodash.clonedeep';
+
 const DEFAULT_MIN_GAS = 21000;
 const DEFAULT_ADDITIONAL_GAS = 10000;
 const DEFAULT_WAIT_CHECK_INTERVAL = 1200;
@@ -24,9 +26,9 @@ class Transaction {
         return this;
     }
 
-    // TODO: Test this
     waitForConfirmation(callback, timeout, checkInterval) {
-        this.prop_waitForConfirmation = new WaitConfirmation.apply(arguments);
+
+        this.prop_waitForConfirmation = new WaitConfirmation(...arguments);
         return this;
     }
 
@@ -43,13 +45,12 @@ class Transaction {
             transactionOptionPos = args.length - 1;
         }
 
-        console.log(args);
-
         if (typeof this.prop_autoGas !== 'undefined') {
-            args[transactionOptionPos].gas = undefined; // Manually remove the gas to avoid if there's any
+
+            args[transactionOptionPos].gas = undefined; // Remove the gas to avoid if there's any
 
             //noinspection JSUnresolvedVariable
-            const estimatedGas = this.obj.estimateGas.apply(this, eliminateCallback(args));
+            const estimatedGas = this.obj.estimateGas(...clonedeep(eliminateCallback(args)));
 
             //noinspection JSUnresolvedFunction
             args[transactionOptionPos].gas = this.web3.toHex(Math.max(estimatedGas + this.prop_autoGas.additionalGas, this.prop_autoGas.minGas));
@@ -57,11 +58,11 @@ class Transaction {
 
 
         if(typeof this.prop_testFunction !== 'undefined') {
-            this.testFunction.apply(this, [this.prop_testFunction.expectValue].concat(args));
+            this.testFunction(...[this.prop_testFunction.expectValue].concat(args));
         }
 
         //noinspection JSUnresolvedVariable
-        const transactionHash = this.obj.sendTransaction.apply(this, args);
+        const transactionHash = this.obj.sendTransaction(...args);
 
         if(typeof this.prop_waitForConfirmation !== 'undefined') {
 
@@ -72,10 +73,10 @@ class Transaction {
             }, this.prop_waitForConfirmation.timeout);
 
             intervalId = setInterval(()=>{
-                if(this.web3.getTransaction(transactionHash) !== null) {
+                if(this.web3.eth.getTransactionReceipt(transactionHash) !== null) {
                     clearTimeout(timeoutCheckId);
                     clearInterval(intervalId);
-                    this.prop_waitForConfirmation.callback.apply(undefined, transactionHash,this.prop_waitForConfirmation.callArgs);
+                    this.prop_waitForConfirmation.callback(...[undefined, transactionHash].concat(this.prop_waitForConfirmation.callArgs));
                 }
             }, this.prop_waitForConfirmation.interval);
 
@@ -90,8 +91,12 @@ class Transaction {
      * @param expectValue the value we expect function to return
      */
     testFunction(expectValue) {
-        if(this.obj.call.apply(this,eliminateCallback(Array.from(arguments).slice(1))) !== expectValue) {
-            console.log(eliminateCallback(Array.from(arguments).slice(1)));
+
+        let args = clonedeep(eliminateCallback(Array.from(arguments).slice(1)).slice(0,-1));
+
+        const retVal = this.obj.call(...args);
+
+        if(retVal !== expectValue) {
             throw 'Contract function call fails when testing the function';
         }
         return this;
